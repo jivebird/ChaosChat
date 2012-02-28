@@ -1,6 +1,9 @@
 require 'bundler/setup'
-require 'sinatra'
 require 'mongo_mapper'
+require 'sinatra'
+require 'sinatra/config_file'
+
+config_file 'chaos-config.yaml'
 
 class ChaosChat < Sinatra::Base
 	get '/' do
