@@ -1,3 +1,7 @@
-INSTALL:
+# installation #
+* bundle install
 
-bundle install
+# starting #
+* rackup
+* check port
+* open browser
