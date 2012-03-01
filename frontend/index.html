@@ -8,12 +8,28 @@
 	
 	<script type="text/javascript" src="js/lib/jquery-1.6.1.min.js"></script>
 	<script type="text/javascript" src="js/lib/ember-0.9.5.min.js"></script>
+	
+	<style type="text/css">
+		#login.logged-in {
+			display: none;
+		}
+	</style>
 </head>
 
 <body>
 	<h1>Chaos Chat</h1>
 	
 	<script type="text/x-handlebars">
+		<div id="login"{{bindAttr class="Chat.loginController.loggedIn"}}>
+			<h2>Login</h2>
+			{{view Em.TextField valueBinding="Chat.loginController.userName"}}
+			{{#view Em.Button target="Chat.loginController" action="login"}}
+				Login
+			{{/view}}
+		</div>
+	</script>
+	
+	<script type="text/x-handlebars" data-template-name="chatView">
 		{{#collection contentBinding="Chat.chatController"}}
 			{{content.user}}: {{content.message}}
 		{{/collection}}

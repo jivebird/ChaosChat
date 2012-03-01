@@ -1,3 +1,38 @@
+describe('Logging in', function() {
+	var loginController;
+	var view;
+	
+	beforeEach(function() {
+		loginController = Chat.loginController;
+	});
+	
+	it('starts out shown', function() {
+		expect(loginController.loggedIn).toEqual(false);
+	});
+	
+	it('switches views on login', function() {
+		login();
+		
+		expect(Em.View.create).toHaveBeenCalledWith({ templateName: 'chatView' });
+		expect(view.append).toHaveBeenCalled();
+		expect(loginController.loggedIn).toEqual(true);
+	});
+	
+	it('user name is saved on login', function() {
+		loginController.userName = 'Boot';
+		login();
+		
+		expect(Chat.userModel.userName).toEqual('Boot');
+	});
+	
+	function login() {
+		view = jasmine.createSpyObj('view', ['append']);
+		
+		spyOn(Em.View, 'create').andReturn(view);
+		loginController.login();
+	}
+});
+
 describe('Chatting', function() {
 	var chatController;
 	
