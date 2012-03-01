@@ -50,11 +50,12 @@ describe('Chatting', function() {
 	});
 	
 	it('can add a message', function() {
+		Chat.userModel.set('userName', 'The signed in user');
 		chatController.set('message', 'new message');
 		chatController.send();
 		
 		expect(chatController.get('content').length).toEqual(1)
-		expect(chatController.get('content')[0].user).toEqual('Boot');
+		expect(chatController.get('content')[0].user).toEqual('The signed in user');
 		expect(chatController.get('content')[0].message).toEqual('new message');
 	});
 	

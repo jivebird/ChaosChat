@@ -33,7 +33,7 @@ Chat.chatController = Em.ArrayController.create({
 	},
 	
 	send: function() {
-		this.addMessage('Boot', this.get('message'));
+		this.addMessage(Chat.userModel.get('userName'), this.get('message'));
 		this.set('message', '');
 	},
 	
