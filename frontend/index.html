@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html lang="en">
+	
+<head>
+	<meta charset="UTF-8" />
+	<title>Chaos Chat</title>
+	
+	<script type="text/javascript" src="js/lib/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/ember-0.9.5.min.js"></script>
+</head>
+
+<body>
+	<h1>Chaos Chat</h1>
+	
+	<script type="text/x-handlebars">
+		{{#collection contentBinding="Chat.chatController"}}
+			{{content.user}}: {{content.message}}
+		{{/collection}}
+		
+		{{view Em.TextArea valueBinding="Chat.chatController.message"}}
+		
+		<div>
+			{{#view Em.Button target="Chat.chatController" action="send"}}
+		  		Send
+			{{/view}}
+		</div>
+	</script>
+	
+	<script type="text/javascript" src="js/chaoschat.js"></script>
+</body>
+
+</html>
