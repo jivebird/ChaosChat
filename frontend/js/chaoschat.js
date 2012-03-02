@@ -1,7 +1,11 @@
 Chat = Ember.Application.create();
 
 Chat.UserModel = Em.Object.extend({
-	userName: ''
+	userName: '',
+	
+	setMainUser: function(user) {
+		this.set('userName', user);
+	}
 });
 
 Chat.userModel = Chat.UserModel.create();
@@ -14,7 +18,7 @@ Chat.loginController = Em.Object.create({
 		var view = Em.View.create({ templateName: 'chatView' });
 		view.append();
 		this.set('loggedIn', true);
-		Chat.userModel.set('userName', this.userName);
+		Chat.userModel.setMainUser(this.userName);
 	}
 });
 

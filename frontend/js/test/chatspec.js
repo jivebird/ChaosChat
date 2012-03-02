@@ -18,11 +18,12 @@ describe('Logging in', function() {
 		expect(loginController.loggedIn).toEqual(true);
 	});
 	
-	it('user name is saved on login', function() {
+	it('user loaded on login', function() {
+		spyOn(Chat.userModel, 'setMainUser');
 		loginController.userName = 'Boot';
 		login();
 		
-		expect(Chat.userModel.userName).toEqual('Boot');
+		expect(Chat.userModel.setMainUser).toHaveBeenCalledWith('Boot');
 	});
 	
 	function login() {
@@ -45,26 +46,40 @@ describe('Chatting', function() {
 	});
 	
 	it('starts empty', function() {
-		expect(chatController.get('message')).toEqual('');
-		expect(chatController.get('content').length).toEqual(0);
+		controllerIsEmpty();
 	});
 	
 	it('can add a message', function() {
-		Chat.userModel.set('userName', 'The signed in user');
-		chatController.set('message', 'new message');
-		chatController.send();
+		Chat.userModel.setMainUser('The signed in user');
+		sendMessage('new message');
 		
-		expect(chatController.get('content').length).toEqual(1)
-		expect(chatController.get('content')[0].user).toEqual('The signed in user');
-		expect(chatController.get('content')[0].message).toEqual('new message');
+		hasMessages([{ user: 'The signed in user', message: 'new message' }]);
 	});
 	
 	it('can be cleared', function() {
-		chatController.set('message', 'new message');
-		chatController.send();
+		sendMessage('new message');
 		chatController.clear();
 		
+		controllerIsEmpty();
+	});
+	
+	function sendMessage(message) {
+		chatController.set('message', message);
+		chatController.send();
+	}
+	
+	function controllerIsEmpty() {
 		expect(chatController.get('message')).toEqual('');
 		expect(chatController.get('content').length).toEqual(0);	
-	});
+	}
+	
+	function hasMessages(messages) {
+		var content = chatController.get('content');
+		expect(content.length).toEqual(messages.length)
+		
+		for(var i = 0; i < messages.length; i++) {
+			expect(content[i].get('user')).toEqual(messages[i].user);
+			expect(content[i].get('message')).toEqual(messages[i].message);
+		}
+	}
 });
