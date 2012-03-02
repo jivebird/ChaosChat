@@ -1,3 +1,4 @@
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
-require 'chaoschat'
+require 'rubygems'
+require File.join(File.dirname(__FILE__), 'chaoschat.rb')
+
 run ChaosChat

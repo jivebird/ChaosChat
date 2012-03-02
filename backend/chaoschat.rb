@@ -1,12 +1,7 @@
-require 'bundler/setup'
-require 'mongo_mapper'
-require 'sinatra'
-require 'sinatra/config_file'
-
-config_file 'chaos-config.yaml'
+require 'sinatra/base'
 
 class ChaosChat < Sinatra::Base
-	get '/' do
-		'hello world'
-	end
+  get '/' do
+    'Hello, world!'
+  end
 end

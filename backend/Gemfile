@@ -1,6 +1,11 @@
 source :rubygems
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'cucumber-sinatra'
+gem 'cucumber'
+gem 'capybara'
+gem 'rspec'
 gem 'mongo_mapper'
 gem 'bson_ext'
 gem 'i18n'
+gem 'rake'
