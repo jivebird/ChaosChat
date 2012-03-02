@@ -4,7 +4,7 @@ Chat.UserModel = Em.Object.extend({
 	userName: ''
 });
 
-Chat.userModel = new Chat.UserModel();
+Chat.userModel = Chat.UserModel.create();
 
 Chat.loginController = Em.Object.create({
 	loggedIn: false,
