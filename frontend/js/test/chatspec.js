@@ -23,7 +23,8 @@ describe('Logging in', function() {
 		loginController.userName = 'Boot';
 		login();
 		
-		expect(Chat.userModel.setMainUser).toHaveBeenCalledWith('Boot');
+		var user = Chat.User.create({ userName: 'Boot' });
+		expect(Chat.userModel.setMainUser).toHaveBeenCalledWith(user);
 	});
 	
 	function login() {
@@ -49,19 +50,44 @@ describe('Chatting', function() {
 		isEmpty();
 	});
 	
-	it('can add a message', function() {
-		Chat.userModel.setMainUser('The signed in user');
-		sendMessage('new message');
-		
-		hasMessages([{ user: 'The signed in user', message: 'new message' }]);
-	});
-	
 	it('can be cleared', function() {
 		sendMessage('new message');
 		chatController.clear();
 		
 		isEmpty();
 	});
+	
+	it('can add a message', function() {
+		setMainUser();
+		sendMessage('new message');
+		
+		hasMessages([{ user: 'The signed in user', message: 'new message' }]);
+	});
+	
+	it('can add multiple messages', function() {
+		setMainUser();
+		sendMessage('new message');
+		sendMessage('another message');
+		
+		hasMessages([
+			{ user: 'The signed in user', message: 'new message' },
+			{ user: 'The signed in user', message: 'another message' }
+		]);
+	});
+	
+	it('reloads the user name when the user is reloaded', function() {
+		setMainUser();
+		sendMessage('new message');
+		setMainUser('Updated Name');
+		
+		hasMessages([{ user: 'Updated Name', message: 'new message' }]);
+	});
+	
+	function setMainUser(userName) {
+		userName = userName != null ? userName : 'The signed in user';
+		var user = Chat.User.create({ userName: userName });
+		Chat.userModel.setMainUser(user);
+	}
 	
 	function sendMessage(message) {
 		chatController.set('message', message);
@@ -77,10 +103,12 @@ describe('Chatting', function() {
 		var content = chatController.get('content');
 		expect(content.length).toEqual(messages.length)
 		
-		for(var i = 0; i < messages.length; i++) {
-			expect(content[i].get('user')).toEqual(messages[i].user);
-			expect(content[i].get('message')).toEqual(messages[i].message);
-		}
+		waits(10, function() {
+			for(var i = 0; i < messages.length; i++) {
+				expect(content[i].get('user')).toEqual(messages[i].user);
+				expect(content[i].get('message')).toEqual(messages[i].message);
+			}
+		});
 	}
 });
 
@@ -103,7 +131,9 @@ describe('Users are stored and managed', function() {
 	});
 	
 	it('can load the main user', function() {
-		userModel.setMainUser('Big Fella');
+		var user = Chat.User.create({ userName: 'Big Fella' });
+		userModel.setMainUser(user);
+		
 		expect(userModel.get('userName')).toEqual('Big Fella');
 	});
 	

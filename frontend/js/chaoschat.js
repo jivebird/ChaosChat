@@ -1,10 +1,14 @@
 Chat = Ember.Application.create();
 
+Chat.User = Em.Object.extend({
+	userName: ''
+});
+
 Chat.UserModel = Em.Object.extend({
 	userName: '',
 	
 	setMainUser: function(user) {
-		this.set('userName', user);
+		this.set('userName', user.userName);
 	},
 	
 	clear: function() {
@@ -22,12 +26,14 @@ Chat.loginController = Em.Object.create({
 		var view = Em.View.create({ templateName: 'chatView' });
 		view.append();
 		this.set('loggedIn', true);
-		Chat.userModel.setMainUser(this.userName);
+		
+		var user = Chat.User.create({ userName: this.userName });
+		Chat.userModel.setMainUser(user);
 	}
 });
 
 Chat.Entry = Em.Object.extend({
-	user: null,
+	userBinding: 'Chat.userModel.userName',
 	message: null
 });
 
@@ -37,7 +43,8 @@ Chat.chatController = Em.ArrayController.create({
 	},
 	
 	addMessage: function(userName, message) {
-		this.pushObject(Chat.Entry.create({ user: userName, message: message }));
+		var entry = Chat.Entry.create({ message: message });
+		this.pushObject(entry);
 	},
 	
 	send: function() {
