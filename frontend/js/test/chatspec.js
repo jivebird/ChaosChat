@@ -46,7 +46,7 @@ describe('Chatting', function() {
 	});
 	
 	it('starts empty', function() {
-		controllerIsEmpty();
+		isEmpty();
 	});
 	
 	it('can add a message', function() {
@@ -60,7 +60,7 @@ describe('Chatting', function() {
 		sendMessage('new message');
 		chatController.clear();
 		
-		controllerIsEmpty();
+		isEmpty();
 	});
 	
 	function sendMessage(message) {
@@ -68,7 +68,7 @@ describe('Chatting', function() {
 		chatController.send();
 	}
 	
-	function controllerIsEmpty() {
+	function isEmpty() {
 		expect(chatController.get('message')).toEqual('');
 		expect(chatController.get('content').length).toEqual(0);	
 	}
@@ -81,5 +81,33 @@ describe('Chatting', function() {
 			expect(content[i].get('user')).toEqual(messages[i].user);
 			expect(content[i].get('message')).toEqual(messages[i].message);
 		}
+	}
+});
+
+describe('Users are stored and managed', function() {
+	var userModel;
+	
+	beforeEach(function() {
+		userModel = new Chat.UserModel();
+	});
+	
+	it('starts empty', function() {
+		isEmpty();
+	});
+	
+	it('can be cleared', function() {
+		userModel.setMainUser('Big Fella');
+		userModel.clear();
+		
+		isEmpty();
+	});
+	
+	it('can load the main user', function() {
+		userModel.setMainUser('Big Fella');
+		expect(userModel.get('userName')).toEqual('Big Fella');
+	});
+	
+	function isEmpty() {
+		expect(userModel.get('userName')).toEqual('');
 	}
 });

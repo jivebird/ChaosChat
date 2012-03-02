@@ -5,6 +5,10 @@ Chat.UserModel = Em.Object.extend({
 	
 	setMainUser: function(user) {
 		this.set('userName', user);
+	},
+	
+	clear: function() {
+		this.set('userName', '');
 	}
 });
 
