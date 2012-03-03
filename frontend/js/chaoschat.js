@@ -6,12 +6,18 @@ Chat.User = Em.Object.extend({
 
 Chat.UserModel = Em.Object.extend({
 	userName: '',
+	users: [],
 	
-	setMainUser: function(user) {
+	loadMainUser: function(user) {
 		this.set('userName', user.userName);
 	},
 	
+	loadUser: function(user) {
+		this.get('users').pushObject(user);
+	},
+	
 	clear: function() {
+		this.set('users', []);
 		this.set('userName', '');
 	}
 });
@@ -28,7 +34,7 @@ Chat.loginController = Em.Object.create({
 		this.set('loggedIn', true);
 		
 		var user = Chat.User.create({ userName: this.userName });
-		Chat.userModel.setMainUser(user);
+		Chat.userModel.loadMainUser(user);
 	}
 });
 

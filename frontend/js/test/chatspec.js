@@ -19,12 +19,12 @@ describe('Logging in', function() {
 	});
 	
 	it('user loaded on login', function() {
-		spyOn(Chat.userModel, 'setMainUser');
+		spyOn(Chat.userModel, 'loadMainUser');
 		loginController.userName = 'Boot';
 		login();
 		
 		var user = Chat.User.create({ userName: 'Boot' });
-		expect(Chat.userModel.setMainUser).toHaveBeenCalledWith(user);
+		expect(Chat.userModel.loadMainUser).toHaveBeenCalledWith(user);
 	});
 	
 	function login() {
@@ -58,14 +58,14 @@ describe('Chatting', function() {
 	});
 	
 	it('can add a message', function() {
-		setMainUser();
+		loadMainUser();
 		sendMessage('new message');
 		
 		hasMessages([{ user: 'The signed in user', message: 'new message' }]);
 	});
 	
 	it('can add multiple messages', function() {
-		setMainUser();
+		loadMainUser();
 		sendMessage('new message');
 		sendMessage('another message');
 		
@@ -76,17 +76,17 @@ describe('Chatting', function() {
 	});
 	
 	it('reloads the user name when the user is reloaded', function() {
-		setMainUser();
+		loadMainUser();
 		sendMessage('new message');
-		setMainUser('Updated Name');
+		loadMainUser('Updated Name');
 		
 		hasMessages([{ user: 'Updated Name', message: 'new message' }]);
 	});
 	
-	function setMainUser(userName) {
+	function loadMainUser(userName) {
 		userName = userName != null ? userName : 'The signed in user';
 		var user = Chat.User.create({ userName: userName });
-		Chat.userModel.setMainUser(user);
+		Chat.userModel.loadMainUser(user);
 	}
 	
 	function sendMessage(message) {
@@ -124,20 +124,37 @@ describe('Users are stored and managed', function() {
 	});
 	
 	it('can be cleared', function() {
-		userModel.setMainUser('Big Fella');
+		userModel.loadMainUser(createUser('Big Fella'));
+		var subUsers = [createUser('first'), createUser('second')];
+		userModel.loadUser(subUsers[0]);
+		userModel.loadUser(subUsers[1]);
 		userModel.clear();
 		
 		isEmpty();
 	});
 	
 	it('can load the main user', function() {
-		var user = Chat.User.create({ userName: 'Big Fella' });
-		userModel.setMainUser(user);
+		var user = createUser('Big Fella');
+		userModel.loadMainUser(user);
 		
 		expect(userModel.get('userName')).toEqual('Big Fella');
 	});
 	
+	it('can load other users', function() {
+		var subUsers = [createUser('first'), createUser('second')];
+		userModel.loadUser(subUsers[0]);
+		userModel.loadUser(subUsers[1]);
+		
+		expect(userModel.get('users').get(0)).toEqual(subUsers[0]);
+		expect(userModel.get('users').get(1)).toEqual(subUsers[1]);
+	});
+	
+	function createUser(userName) {
+		return Chat.User.create({ userName: userName });
+	}
+	
 	function isEmpty() {
 		expect(userModel.get('userName')).toEqual('');
+		expect(userModel.get('users').length).toEqual(0);
 	}
 });
