@@ -2,6 +2,6 @@ require 'sinatra/base'
 
 class ChaosChat < Sinatra::Base
   get '/' do
-    'Hello, world!'
+    'Login'
   end
 end

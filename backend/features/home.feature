@@ -1,5 +1,5 @@
-Feature: view pages
+Feature: Homepage 
 
-	Scenario: Home page
-		Given I am viewing "/"
-		Then I should see "Hello, world!"
+	Scenario: Viewing 
+		Given I am on the homepage 
+		Then I should see "Login"
