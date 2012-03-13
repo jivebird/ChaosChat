@@ -5,8 +5,10 @@ Chat.User = Em.Object.extend({
 });
 
 Chat.UserModel = Em.Object.extend({
-	userName: '',
-	users: [],
+	init: function() {
+		this.userName = '';
+		this.users = [];
+	},
 	
 	loadMainUser: function(user) {
 		this.set('userName', user.userName);
@@ -23,6 +25,29 @@ Chat.UserModel = Em.Object.extend({
 });
 
 Chat.userModel = Chat.UserModel.create();
+
+Chat.Message = Em.Object.extend({
+	text: '',
+	isMainUser: false
+});
+
+Chat.MessageModel = Em.Object.extend({
+	init: function() {
+		this.messages = [];
+	},
+	
+	addMessage: function(text, user) {
+		var message = Chat.Message.create({ text: text });
+		message.set('userIndex', user);
+		message.set('isMainUser', user == null);
+		this.get('messages').push(message);
+	},
+	
+	getMessage: function(index) {
+		var message = this.get('messages').get(index);
+		return message;
+	}
+});
 
 Chat.loginController = Em.Object.create({
 	loggedIn: false,
