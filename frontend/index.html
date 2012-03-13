@@ -31,7 +31,7 @@
 	
 	<script type="text/x-handlebars" data-template-name="chatView">
 		{{#collection contentBinding="Chat.chatController"}}
-			{{content.user}}: {{content.message}}
+			{{content.user}}: {{content.text}}
 		{{/collection}}
 		
 		{{view Em.TextArea valueBinding="Chat.chatController.message"}}

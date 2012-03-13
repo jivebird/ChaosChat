@@ -56,16 +56,25 @@ describe('Chatting', function() {
 	});
 	
 	it('can be cleared', function() {
-		sendMessage('new message');
+		addMessage('new message');
 		chatController.clear();
 		
 		isEmpty();
 	});
 	
-	it('can add a message', function() {
+	it('can send messages', function() {
+		spyOn(Chat.chatService, 'send');
+		chatController.set('message', 'to send');
+		chatController.send();
+		
+		expect(Chat.chatService.send).toHaveBeenCalledWith('to send');
+		expect(chatController.get('message')).toEqual('');
+	});
+	
+	it('shows messages from the model', function() {
 		runs(function() {
 			loadMainUser();
-			sendMessage('new message');
+			addMessage('new message');
 		});
 		
 		wait();
@@ -75,11 +84,11 @@ describe('Chatting', function() {
 		});
 	});
 	
-	it('can add multiple messages', function() {
+	it('shows multiple messages', function() {
 		runs(function() {
 			loadMainUser();
-			sendMessage('new message');
-			sendMessage('another message');
+			addMessage('new message');
+			addMessage('another message');
 		});
 		
 		wait();
@@ -92,16 +101,16 @@ describe('Chatting', function() {
 		});
 	});
 	
-	it('can send messages from other users', function() {
+	it('shows messages from other users', function() {
 		runs(function() {
 			loadMainUser();
 			var subUsers = [createUser('first'), createUser('second')];
 			Chat.userModel.loadUser(subUsers[0]);
 			Chat.userModel.loadUser(subUsers[1]);
 			
-			sendMessage('message 0', 0);
-			sendMessage('main message');
-			sendMessage('message 1', 1);
+			addMessage('message 0', 0);
+			addMessage('main message');
+			addMessage('message 1', 1);
 		});
 		
 		wait();
@@ -118,7 +127,7 @@ describe('Chatting', function() {
 	it('reloads the user name when the user is reloaded', function() {
 		runs(function() {
 			loadMainUser();
-			sendMessage('new message');
+			addMessage('new message');
 			loadMainUser('Updated Name');
 		});
 		
@@ -135,7 +144,7 @@ describe('Chatting', function() {
 		Chat.userModel.loadMainUser(user);
 	}
 	
-	function sendMessage(message, user) {
+	function addMessage(message, user) {
 		Chat.messageModel.addMessage(message, user);
 	}
 	
@@ -263,6 +272,6 @@ describe('Chat info is sent and received from the server', function() {
 	});
 	
 	it('sends messages to the server from the main user', function() {
-		service.sendMessage('message');
+		service.send('message');
 	});
 });
