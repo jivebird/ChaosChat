@@ -48,6 +48,7 @@ describe('Chatting', function() {
 	
 	afterEach(function() {
 		chatController.clear();
+		Chat.messageModel.clear();
 	});
 	
 	it('starts empty', function() {
@@ -92,16 +93,26 @@ describe('Chatting', function() {
 	});
 	
 	it('can send messages from other users', function() {
-	/*
-		loadMainUser();
-		var subUsers = [createUser('first'), createUser('second')];
-		userModel.loadUser(subUsers[0]);
-		userModel.loadUser(subUsers[1]);
+		runs(function() {
+			loadMainUser();
+			var subUsers = [createUser('first'), createUser('second')];
+			Chat.userModel.loadUser(subUsers[0]);
+			Chat.userModel.loadUser(subUsers[1]);
+			
+			sendMessage('message 0', 0);
+			sendMessage('main message');
+			sendMessage('message 1', 1);
+		});
 		
-		sendMessage('message 0', 0);
-		sendMessage('main message');
-		sendMessage('message 1', 1);
-	*/
+		wait();
+		
+		runs(function() {
+			hasMessages([
+				{ user: 'first', message: 'message 0' },
+				{ user: 'The signed in user', message: 'main message' },
+				{ user: 'second', message: 'message 1' }
+			]);
+		});
 	});
 	
 	it('reloads the user name when the user is reloaded', function() {
@@ -125,13 +136,11 @@ describe('Chatting', function() {
 	}
 	
 	function sendMessage(message, user) {
-		chatController.set('message', message);
-		chatController.send();
+		Chat.messageModel.addMessage(message, user);
 	}
 	
 	function isEmpty() {
 		expect(chatController.get('message')).toEqual('');
-		expect(chatController.get('content').length).toEqual(0);	
 	}
 	
 	function hasMessages(messages) {
@@ -140,7 +149,7 @@ describe('Chatting', function() {
 		
 		for(var i = 0; i < messages.length; i++) {
 			expect(content[i].get('user')).toEqual(messages[i].user);
-			expect(content[i].get('message')).toEqual(messages[i].message);
+			expect(content[i].get('text')).toEqual(messages[i].message);
 		}
 	}
 });
@@ -182,15 +191,15 @@ describe('Users are stored and managed', function() {
 		expect(userModel.get('users').get(1)).toEqual(subUsers[1]);
 	});
 	
-	function createUser(userName) {
-		return Chat.User.create({ userName: userName });
-	}
-	
 	function isEmpty() {
 		expect(userModel.get('userName')).toEqual('');
 		expect(userModel.get('users').length).toEqual(0);
 	}
 });
+
+function createUser(userName) {
+	return Chat.User.create({ userName: userName });
+}
 
 describe('Chat info is stored and managed', function() {
 	var messageModel;
@@ -215,6 +224,21 @@ describe('Chat info is stored and managed', function() {
 		
 		hasMainUserMessage(0, 'new message');
 		hasSubUserMessage(1, 5, 'another message');
+	});
+	
+	it('tracks message count', function() {
+		messageModel.addMessage('new message');
+		messageModel.addMessage('another message', 5);
+		
+		expect(messageModel.get('messageCount')).toEqual(2);
+	});
+	
+	it('can be cleared', function() {
+		messageModel.addMessage('new message');
+		messageModel.addMessage('another message', 5);
+		messageModel.clear();
+		
+		expect(messageModel.get('messageCount')).toEqual(0);
 	});
 	
 	function hasMainUserMessage(index, text) {

@@ -28,12 +28,23 @@ Chat.userModel = Chat.UserModel.create();
 
 Chat.Message = Em.Object.extend({
 	text: '',
-	isMainUser: false
+	isMainUser: false,
+	
+	_mainUserBinding: 'Chat.userModel.userName',
+	_usersBinding: 'Chat.userModel.users',
+	
+	user: function() {
+		return this.get('isMainUser') ? this.get('_mainUser') : this.get('_users')[this.get('userIndex')].get('userName');
+	}.property('_mainUser', '_users')
 });
 
 Chat.MessageModel = Em.Object.extend({
 	init: function() {
-		this.messages = [];
+		this.clear();
+	},
+	
+	clear: function() {
+		this.set('messages', []);
 	},
 	
 	addMessage: function(text, user) {
@@ -44,10 +55,15 @@ Chat.MessageModel = Em.Object.extend({
 	},
 	
 	getMessage: function(index) {
-		var message = this.get('messages').get(index);
-		return message;
-	}
+		return this.get('messages').get(index);
+	},
+	
+	messageCount: function() {
+		return this.get('messages').length;
+	}.property('messages')
 });
+
+Chat.messageModel = Chat.MessageModel.create();
 
 Chat.ChatService = Em.Object.extend({
 	sendMessage: function(text) {
@@ -75,6 +91,8 @@ Chat.Entry = Em.Object.extend({
 });
 
 Chat.chatController = Em.ArrayController.create({
+	contentBinding: 'Chat.messageModel.messages',
+	
 	init: function() {
 		this.clear();
 	},
@@ -90,7 +108,6 @@ Chat.chatController = Em.ArrayController.create({
 	},
 	
 	clear: function() {
-		this.set('content', []);
 		this.set('message', '');
 	}
 });
