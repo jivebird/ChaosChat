@@ -49,6 +49,12 @@ Chat.MessageModel = Em.Object.extend({
 	}
 });
 
+Chat.ChatService = Em.Object.extend({
+	sendMessage: function(text) {
+		// Stubbed
+	}
+});
+
 Chat.loginController = Em.Object.create({
 	loggedIn: false,
 	userName: '',

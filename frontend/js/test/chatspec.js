@@ -230,3 +230,15 @@ describe('Chat info is stored and managed', function() {
 		expect(message.text).toEqual(text);
 	}
 });
+
+describe('Chat info is sent and received from the server', function() {
+	var service;
+	
+	beforeEach(function() {
+		service = Chat.ChatService.create();
+	});
+	
+	it('sends messages to the server from the main user', function() {
+		service.sendMessage('message');
+	});
+});
