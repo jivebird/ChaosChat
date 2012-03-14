@@ -1,12 +1,14 @@
 source :rubygems
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'cucumber-sinatra'
-gem 'cucumber'
-gem 'capybara'
+
 gem 'rspec'
 gem 'rack-test'
+
 gem 'mongo_mapper'
+gem 'machinist_mongo', :require => 'machinist/mongo_mapper'
 gem 'bson_ext'
+
 gem 'i18n'
+
 gem 'rake'
