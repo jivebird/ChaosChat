@@ -1,4 +1,7 @@
 require 'rubygems'
 require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:specs)
+desc "Run specs"
+RSpec::Core::RakeTask.new(:spec) do |t|
+	t.rspec_opts = %w{--colour --format progress}
+end

@@ -5,8 +5,8 @@ gem 'sinatra-contrib'
 gem 'rspec'
 gem 'rack-test'
 
-gem 'mongo_mapper'
-gem 'machinist_mongo', :require => 'machinist/mongo_mapper'
+gem 'mongoid'
+gem 'mongoid-rspec'
 gem 'bson_ext'
 
 gem 'i18n'
