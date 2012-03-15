@@ -1,5 +1,5 @@
 require 'spec_helper'
-require File.join(File.dirname(__FILE__), '..', 'user')
+require File.join(File.dirname(__FILE__), '..', 'models')
 require 'mongoid-rspec'
 
 describe User do
