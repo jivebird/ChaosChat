@@ -8,9 +8,9 @@ describe ChaosChat do
 		ChaosChat
 	end
 
-	it 'says Hello, World' do
-		get '/'
+	it 'logs in' do
+		post '/user/somename'
+		follow_redirect!
 		last_response.should be_ok
-		last_response.body.should == 'Hello, World'
 	end
 end
