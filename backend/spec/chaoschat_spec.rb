@@ -9,8 +9,9 @@ describe ChaosChat do
 	end
 
 	it 'logs in' do
-		post '/in', params={:name=>'test'}
+		post '/in', params={:name=>'testuser'}
 		follow_redirect!
+		rack_mock_session.cookie_jar['name'].should == 'testuser'
 		last_response.should be_ok
 	end
 end

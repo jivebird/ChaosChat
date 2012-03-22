@@ -2,9 +2,11 @@ require 'sinatra/base'
 
 class ChaosChat < Sinatra::Base
 	post '/in' do
-		redirect '/user/'+params[:name]
+		name = params[:name]
+		response.set_cookie 'name', :value => name
+		redirect '/chats'
 	end
-	get '/user/:name' do |name|
-		'hello ' + name
+	get '/chats' do
+		'hello'		
 	end
 end
