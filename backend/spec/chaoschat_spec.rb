@@ -9,7 +9,7 @@ describe ChaosChat do
 	end
 
 	it 'logs in' do
-		post '/user/somename'
+		post '/in', params={:name=>'test'}
 		follow_redirect!
 		last_response.should be_ok
 	end

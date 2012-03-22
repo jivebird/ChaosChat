@@ -1,8 +1,8 @@
 require 'sinatra/base'
 
 class ChaosChat < Sinatra::Base
-	post '/user/:name' do |name|
-		redirect '/user/'+name
+	post '/in' do
+		redirect '/user/'+params[:name]
 	end
 	get '/user/:name' do |name|
 		'hello ' + name
