@@ -8,10 +8,16 @@ describe ChaosChat do
 		ChaosChat
 	end
 
+	let(:test_username) { $test_user = 'test_user' }
+
+	def login_as_test_user
+		post '/in', params={:name=>test_username}
+	end
+
 	it 'logs in' do
-		post '/in', params={:name=>'testuser'}
+		login_as_test_user
 		follow_redirect!
-		rack_mock_session.cookie_jar['name'].should == 'testuser'
+		rack_mock_session.cookie_jar['name'].should == test_username
 		last_response.should be_ok
 	end
 end

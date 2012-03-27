@@ -7,6 +7,6 @@ class ChaosChat < Sinatra::Base
 		redirect '/chats'
 	end
 	get '/chats' do
-		'hello'		
+		''
 	end
 end

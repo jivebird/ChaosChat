@@ -10,6 +10,8 @@ end
 
 class Chat
 	include Mongoid::Document
+	field :subject, type: String
+	validates_presence_of :subject
 	has_and_belongs_to_many :users
 	embeds_many :posts
 end

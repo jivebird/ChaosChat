@@ -10,6 +10,8 @@ describe User do
 end
 
 describe Chat do
+	it { should have_field(:subject).of_type(String) }
+	it { should validate_presence_of(:subject) }
 	it { should have_and_belong_to_many(:users) }
 	it { should embed_many(:posts) }
 end
